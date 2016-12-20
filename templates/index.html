@@ -1,0 +1,25 @@
+{% include 'header.html' %}
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+
+<h1>{{ blog.title }}
+<br>
+<small>{{ blog.subtitle }}</small></h1>
+
+{% for post in posts %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">{{ post.title }}
+    <div class="pull-right">{{ post.created.strftime('%Y-%m-%d') }}</div></div>
+  </div>
+  <div class="panel-body">
+    <pre>{{ post.comment|safe }}</pre>
+  </div>
+</div>
+{% endfor %}
+
+  </div>
+</div>
+
+{% include 'footer.html' %}
