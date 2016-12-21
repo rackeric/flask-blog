@@ -6,7 +6,7 @@ import datetime
 app = Flask(__name__)
 
 app.config['MONGOALCHEMY_DATABASE'] = 'myflaskblog'
-app.config['MONGOALCHEMY_SERVER'] = '172.17.0.2'
+app.config['MONGOALCHEMY_SERVER'] = 'mongo.bashtothefuture.com'
 db = MongoAlchemy(app)
 
 auth = Auth(app, login_url_name='ulogin')
