@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, url_for, g, render_template
 from flask.ext.mongoalchemy import MongoAlchemy
 from flaskext.auth import Auth, AuthUser, login_required, logout, get_current_user_data
+from simplecrypt import encrypt, decrypt
+from binascii import hexlify, unhexlify
 import datetime
 
 app = Flask(__name__)
@@ -11,10 +13,13 @@ db = MongoAlchemy(app)
 
 auth = Auth(app, login_url_name='ulogin')
 
+# simplecrypt encryption key
+app.config['ENCRYPTION_KEY'] = 'myencryptkey'
 
 class User(db.Document):
     name = db.StringField()
     password = db.StringField()
+    #encrypted = db.StringField()
 
 class Post(db.Document):
     created = db.DateTimeField()
@@ -36,11 +41,34 @@ class Brand(db.Document):
 
 @app.before_request
 def init_users():
-    admin = User.query.filter(User.name == 'admin').first()
-    authAdmin = AuthUser(username=admin.name, password=admin.password)
-    authAdmin.set_and_encrypt_password(admin.password)
-    # TODO: scale users list, currently just single user mode
-    g.users = {'admin': authAdmin}
+    # first try to get admin user if null then procee to setup
+    try:
+        admin = User.query.filter(User.name == 'admin').first()
+    except:
+        pass
+
+    # TODO: find a way to not have this run all the time, SO SLOW!
+    if admin is not None:
+        plaintext = decrypt(app.config['ENCRYPTION_KEY'], unhexlify(admin.password))
+        authAdmin = AuthUser(username=admin.name)
+        authAdmin.set_and_encrypt_password(plaintext.decode('utf8'))
+        #admin.encrypted = authAdmin.password
+        #admin.save()
+        # TODO: scale users list, currently just single user mode
+        g.users = {'admin': authAdmin}
+    elif admin is None:
+        username = "admin"
+        password = "password"
+        auth = AuthUser(username=username)
+        auth.set_and_encrypt_password(password)
+
+        ciphertext = encrypt(app.config['ENCRYPTION_KEY'], password)
+
+        myuser = User(name=username, password=hexlify(ciphertext))
+        myuser.save()
+        brand = Brand.query.first()
+        #return render_template('setup.html', brand=brand)
+        return redirect(url_for('ulogin'))
 
 def index():
     if request.method == 'POST':
@@ -189,6 +217,22 @@ def viewpage(id):
     brand = Brand.query.first()
     pages = Page.query
     return render_template('page.html', page=mypage, user=get_current_user_data(), brand=brand, pages=pages)
+
+@app.route('/setup', methods=['POST'])
+def setup():
+    username = request.form['username']
+    password = request.form['password']
+    auth = AuthUser(username=username)
+    auth.set_and_encrypt_password(password)
+
+    myuser = User(name="something")
+    myuser.password = "somethingelse"
+    myuser.save()
+
+    brand = Brand.query.first()
+    pages = Page.query
+    #return render_template('login.html', user=get_current_user_data(), brand=brand, pages=pages)
+    return redirect(url_for('ulogin'))
 
 
 app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
