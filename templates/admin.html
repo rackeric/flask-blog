@@ -75,6 +75,21 @@
     <li>{{ page.title }} [<a href="/pageedit/{{ page.mongo_id }}">Edit</a>] [<a href="/pageremove/{{ page.mongo_id }}">Delete</a>]</li>
 {% endfor %}
 
+<br />
+<hr>
+
+<h3>Change Password</h3>
+<form action="/changepass" method="POST">
+<div class="form-group">
+  <label for="title">Username:</label>
+  <input type="text" class="form-control" name="username" value="admin">
+</div>
+<div class="form-group">
+  <label for="password">Password:</label>
+  <input type="password" class="form-control" name="password">
+</div>
+<input type="submit" value="Save" class="btn btn-danger pull-right"/>
+</form>
 
   </div>
 </div>

@@ -1,5 +1,3 @@
 Flask
 Flask-Auth
 Flask-MongoAlchemy
-pycrypto
-simple-crypt
