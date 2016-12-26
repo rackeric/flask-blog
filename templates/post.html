@@ -4,7 +4,7 @@
   <div class="col-md-10 col-md-offset-1">
 
     <h1>{{ post.title }}<small> posted on {{ post.created.strftime('%Y-%m-%d') }}</small></h1>
-    <pre>{{ post.comment|safe }}</pre>
+    <pre style="white-space: pre-wrap;">{{ post.comment|safe }}</pre>
 
     <hr>
     <h3>{{ ccount }} Comments</h3>
