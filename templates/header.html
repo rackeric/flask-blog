@@ -22,7 +22,7 @@
     <ul class="nav navbar-nav">
       <li {%- if request.path == "/" %} class="active"{% endif %}><a href="/">Home</a></li>
       {% for page in pages %}
-      <li {%- if "page.mongo_id" in "request.url" %} class="active"{% endif %}><a href="/pages/{{ page.mongo_id }}">{{ page.title }}</a></li>
+      <li {%- if page.mongo_id|string in request.path %} class="active"{% endif %}><a href="/pages/{{ page.mongo_id }}">{{ page.title }}</a></li>
       {% endfor %}
     </ul>
     <ul class="nav navbar-nav navbar-right">

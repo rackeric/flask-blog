@@ -267,7 +267,9 @@ def comment(id):
         mycomment.save()
         return redirect(url_for('viewpost', id=id))
 
-
+def get_comment_count(id):
+    comments = Comment.query.filter(Comment.post_id == str(id))
+    return comments.count()
 
 
 app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
@@ -278,4 +280,5 @@ app.add_url_rule('/login/', 'ulogin', ulogin, methods=['GET', 'POST'])
 app.secret_key = 'N4BUdSXUzHxNoO8g'
 
 if __name__ == '__main__':
+    app.jinja_env.globals.update(get_comment_count=get_comment_count)
     app.run(debug=True,host='0.0.0.0')

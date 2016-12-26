@@ -16,6 +16,8 @@
   </div>
   <div class="panel-body">
     <pre style="white-space: pre-wrap;">{{ post.comment|safe }}</pre>
+    <br />
+    <div class="pull-right"><i>{{ get_comment_count(post.mongo_id) }} Comments</i></div>
   </div>
 </div>
 {% endfor %}
