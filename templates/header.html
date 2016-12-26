@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/">{{ brand.brand }}</a>
@@ -23,7 +23,7 @@
       <li {%- if request.path == "/" %} class="active"{% endif %}><a href="/">Home</a></li>
       {% for page in pages %}
       <li {%- if "page.mongo_id" in "request.url" %} class="active"{% endif %}><a href="/pages/{{ page.mongo_id }}">{{ page.title }}</a></li>
-      {% endfor %}}
+      {% endfor %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
       {% if not user %}
@@ -31,7 +31,7 @@
         <li {%- if request.path == "/login/" %} class="active"{% endif %}><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       {% else %}
         <li {%- if request.path == "/admin/" %} class="active"{% endif %}><a href="/admin"><span class="glyphicon glyphicon-cog"></span> Admin</a></li>
-        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>S
+        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       {% endif %}
     </ul>
   </div>

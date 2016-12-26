@@ -10,8 +10,9 @@
 {% for post in posts %}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <div class="panel-title">{{ post.title }}
-    <div class="pull-right">{{ post.created.strftime('%Y-%m-%d') }}</div></div>
+    <div class="panel-title"><a href="/posts/{{ post.mongo_id }}"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> {{ post.title }}</a>
+      <div class="pull-right">{{ post.created.strftime('%Y-%m-%d') }}</div>
+    </div>
   </div>
   <div class="panel-body">
     <pre>{{ post.comment|safe }}</pre>

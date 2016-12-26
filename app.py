@@ -27,6 +27,13 @@ class Page(db.Document):
     title = db.StringField()
     content = db.StringField()
 
+class Comment(db.Document):
+    created = db.DateTimeField()
+    comment = db.StringField()
+    name = db.StringField()
+    email = db.StringField()
+    post_id = db.StringField()
+
 class Blog(db.Document):
     title = db.StringField()
     subtitle = db.StringField()
@@ -211,6 +218,15 @@ def viewpage(id):
     pages = Page.query
     return render_template('page.html', page=mypage, user=get_current_user_data(), brand=brand, pages=pages)
 
+@login_required()
+@app.route('/posts/<id>', methods=['GET'])
+def viewpost(id):
+    mypost = Post.query.get(id)
+    brand = Brand.query.first()
+    pages = Page.query
+    comments = Comment.query.filter(Comment.post_id == id)
+    return render_template('post.html', post=mypost, user=get_current_user_data(), brand=brand, pages=pages, comments=comments, ccount=comments.count())
+
 @app.route('/setup', methods=['POST'])
 def setup():
     username = request.form['username']
@@ -236,6 +252,22 @@ def changepass():
     user.password = password
     user.save()
     return redirect(url_for('admin'))
+
+@login_required()
+@app.route('/comment/<id>', methods=['GET', 'POST'])
+def comment(id):
+    brand = Brand.query.first()
+    pages = Page.query
+    if request.method == 'POST':
+        comment = request.form['comment']
+        name = request.form['name']
+        email = request.form['email']
+        time = datetime.datetime.today()
+        mycomment = Comment(created=time, comment=comment, name=name, email=email, post_id=id)
+        mycomment.save()
+        return redirect(url_for('viewpost', id=id))
+
+
 
 
 app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
