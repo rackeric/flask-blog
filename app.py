@@ -5,9 +5,21 @@ import datetime
 
 app = Flask(__name__)
 
+if "MONGO_SERVER" in os.environ:
+    app.config['MONGOALCHEMY_SERVER'] = os.environ['MONGO_SERVER']
+else:
+    app.config['MONGOALCHEMY_SERVER'] = 'mongo'
+if "MONGO_USER" in os.environ:
+    app.config['MONGOALCHEMY_USER'] = os.environ['MONGO_USER']
+if "MONGO_PASSWORD" in os.environ:
+    app.config['MONGOALCHEMY_PASSWORD'] = os.environ['MONGO_PASSWORD']
+
 app.config['MONGOALCHEMY_DATABASE'] = 'myflaskblog'
-app.config['MONGOALCHEMY_SERVER'] = 'mongo.bashtothefuture.com'
-db = MongoAlchemy(app)
+
+try:
+    db = MongoAlchemy(app)
+except:
+    print "DATABASE CONNECTION ERROR"
 
 auth = Auth(app, login_url_name='ulogin')
 
