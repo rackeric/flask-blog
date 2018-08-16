@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, url_for, g, render_template
 from flask_mongoalchemy import MongoAlchemy
 from flaskext.auth import Auth, AuthUser, login_required, logout, get_current_user_data
 import datetime
+import os
 
 app = Flask(__name__)
 
